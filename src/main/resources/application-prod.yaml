@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: ${JDBC_URL}
+    username: ${JDBC_USERNAME}
+    password: ${JDBC_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  ai:
+    vectorstore:
+      pgvector:
+        initialize-schema: true
+        dimensions: ${PGVECTOR_DIMENSIONS:1024}
+  threads:
+    virtual:
+      enabled: true
+
+agent:
+  storage:
+    provider: minio
+
+logging:
+  level:
+    io.github.izzcj.gamemaster: INFO
