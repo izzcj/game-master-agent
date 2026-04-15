@@ -1,0 +1,74 @@
+:root {
+  color-scheme: dark;
+  --bg: #07111f;
+  --bg-elevated: rgba(8, 16, 31, 0.82);
+  --panel: rgba(10, 20, 38, 0.92);
+  --panel-strong: #0d1830;
+  --panel-soft: rgba(120, 152, 198, 0.08);
+  --line: rgba(148, 163, 184, 0.2);
+  --line-strong: rgba(244, 114, 23, 0.38);
+  --text: #e5eefc;
+  --muted: #8ea3c4;
+  --accent: #ff7a18;
+  --accent-soft: rgba(255, 122, 24, 0.12);
+  --accent-2: #f7b954;
+  --danger: #fb7185;
+  --shadow: 0 22px 80px rgba(1, 6, 19, 0.46);
+  --radius-xl: 32px;
+  --radius-lg: 24px;
+  --radius-md: 18px;
+  --font-display: "Bahnschrift", "Trebuchet MS", "PingFang SC", sans-serif;
+  --font-body: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
+html {
+  background:
+    radial-gradient(circle at top, rgba(255, 122, 24, 0.14), transparent 24rem),
+    radial-gradient(circle at 85% 15%, rgba(247, 185, 84, 0.16), transparent 22rem),
+    linear-gradient(180deg, #0b1427 0%, #07111f 52%, #040914 100%);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--text);
+  background:
+    linear-gradient(rgba(132, 157, 196, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(132, 157, 196, 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
