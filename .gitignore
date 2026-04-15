@@ -31,6 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-### Frontend env ###
-game-master-web/.env
