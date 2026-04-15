@@ -3,9 +3,9 @@ spring:
     name: game-master-agent
   ai:
     deepseek:
-      api-key: sk-acddef9e731d4c1484be8ddc95d7a55b
+      api-key: your-key
     minimax:
-      api-key: sk-cp-FQHLImbH5xfeWDWDSPTSIiTpYEHtHCV9m5De1weYXr5zgx6EMzSj3-wwLvSnH9QgYh8-42jqI8HufQF2TJitSsobnmrTn24Ub7t-kZNM7u-0nKsQzs-zIkE
+      api-key: your-key
       chat:
         options:
           model: MiniMax-M2.7
