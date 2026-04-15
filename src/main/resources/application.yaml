@@ -1,70 +1,11 @@
 spring:
   application:
     name: game-master-agent
-  profiles:
-    default: local
-  servlet:
-    multipart:
-      max-file-size: 20MB
-      max-request-size: 20MB
   ai:
-    model:
-      chat: none
-      embedding: none
-    vectorstore:
-      pgvector:
-        table-name: game_master_agent_vector_store
-  flyway:
-    enabled: true
-    locations: classpath:db/migration
-  jackson:
-    default-property-inclusion: non_null
-
-mybatis:
-  configuration:
-    map-underscore-to-camel-case: true
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics
-
-agent:
-  storage:
-    provider: local
-    local-base-path: data/uploads
-    minio:
-      endpoint: ${MINIO_ENDPOINT:http://127.0.0.1:9000}
-      bucket: ${MINIO_BUCKET:game-master-agent}
-      access-key: ${MINIO_ACCESS_KEY:minioadmin}
-      secret-key: ${MINIO_SECRET_KEY:minioadmin}
-  search:
-    default-top-k: 5
-    providers:
-      - name: local-cache
-        type: cache
-        enabled: true
-  model:
-    chat-models:
-      deepseek-chat:
-        bean-name: deepSeekChatModel
-        provider: deepseek
-        display-name: DeepSeek Chat
-      zhipuai-primary:
-        bean-name: zhiPuAiChatModel
-        provider: zhipuai
-        display-name: ZhiPu Primary
-    embedding-models:
-      zhipuai-embedding:
-        bean-name: zhiPuAiEmbeddingModel
-        provider: zhipuai
-        display-name: ZhiPu Embedding
-    routing:
-      query-rewrite: deepseek-chat
-      game-resolve: deepseek-chat
-      answer-summary: deepseek-chat
-      final-answer: zhipuai-primary
-      fallback-chat: deepseek-chat
-      embedding: zhipuai-embedding
-      doc-tag-extract: deepseek-chat
+    deepseek:
+      api-key: sk-acddef9e731d4c1484be8ddc95d7a55b
+    minimax:
+      api-key: sk-cp-FQHLImbH5xfeWDWDSPTSIiTpYEHtHCV9m5De1weYXr5zgx6EMzSj3-wwLvSnH9QgYh8-42jqI8HufQF2TJitSsobnmrTn24Ub7t-kZNM7u-0nKsQzs-zIkE
+      chat:
+        options:
+          model: MiniMax-M2.7
