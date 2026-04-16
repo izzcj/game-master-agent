@@ -1,7 +1,10 @@
 package io.github.izzcj.gamemaster.config;
 
-import io.github.izzcj.gamemaster.client.ChatClientRegister;
-import io.github.izzcj.gamemaster.client.MemoryChatClientRegister;
+import io.github.izzcj.gamemaster.advisor.GameMasterLoggingAdvisor;
+import io.github.izzcj.gamemaster.client.ChatClientRegistry;
+import io.github.izzcj.gamemaster.client.MemoryChatClientRegistry;
+import io.github.izzcj.gamemaster.log.ChatClientLogging;
+import io.github.izzcj.gamemaster.log.DefaultChatClientLogging;
 import lombok.NonNull;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatModel;
@@ -24,35 +27,46 @@ import java.util.Map;
 public class GameMasterAgentAutoConfiguration {
 
     /**
-     * DeepSeekChatClientBean
+     * 默认ChatClient日志实现
+     */
+    @Bean
+    @ConditionalOnMissingBean(ChatClientLogging.class)
+    public ChatClientLogging defaultChatClientLogging() {
+        return new DefaultChatClientLogging();
+    }
+
+
+   /**
+     * DeepSeek ChatClient Bean
      */
     @Bean("deepseekChatClient")
-    public ChatClient deepSeekChatClient(@Qualifier("deepSeekChatModel") ChatModel chatModel) {
-        return ChatClient.create(chatModel);
+    public ChatClient deepSeekChatClient(@Qualifier("deepSeekChatModel") ChatModel chatModel, ChatClientLogging chatClientLogging) {
+        return ChatClient.builder(chatModel).defaultAdvisors(new GameMasterLoggingAdvisor(chatClientLogging)).build();
     }
 
     /**
-     * MinimaxChatClientBean
+     * Minimax ChatClient Bean
      */
     @Bean("minimaxChatClient")
-    public ChatClient minimaxChatClient(@Qualifier("miniMaxChatModel") ChatModel chatModel) {
-        return ChatClient.create(chatModel);
+     public ChatClient minimaxChatClient(@Qualifier("miniMaxChatModel") ChatModel chatModel, ChatClientLogging chatClientLogging) {
+        return ChatClient.builder(chatModel).defaultAdvisors(new GameMasterLoggingAdvisor(chatClientLogging)).build();
     }
 
     /**
      * 默认ChatClient注册中心
      */
     @Bean
-    @ConditionalOnMissingBean(ChatClientRegister.class)
-    public ChatClientRegister chatClientRegister(Map<String, ChatClient> chatClientMap) {
-        return new MemoryChatClientRegister(chatClientMap);
+    @ConditionalOnMissingBean(ChatClientRegistry.class)
+    public ChatClientRegistry chatClientRegister(Map<String, ChatClient> chatClientMap) {
+        MemoryChatClientRegistry memoryChatClientRegister = new MemoryChatClientRegistry();
+        chatClientMap.forEach(memoryChatClientRegister::registerChatClient);
+        return memoryChatClientRegister;
     }
 
     /**
      * 跨域配置
      */
     @Bean
-    @ConditionalOnMissingBean(name = "gameMasterAgentCorsConfigurer")
     public WebMvcConfigurer gameMasterAgentCorsConfigurer() {
         return new WebMvcConfigurer() {
             @Override

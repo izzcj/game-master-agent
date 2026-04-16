@@ -5,7 +5,6 @@ import org.springframework.ai.chat.client.ChatClient;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * 基于内存的ChatClient注册中心
@@ -13,16 +12,12 @@ import java.util.concurrent.ConcurrentMap;
  * @author Ale
  * @version 1.0.0
  */
-public class MemoryChatClientRegister implements ChatClientRegister {
+public class MemoryChatClientRegistry implements ChatClientRegistry {
 
     /**
      * ChatClient映射表
      */
     private final Map<String, ChatClient> chatClientMap = new ConcurrentHashMap<>();
-
-    public MemoryChatClientRegister(Map<String, ChatClient> chatClientMap) {
-        this.chatClientMap.putAll(chatClientMap);
-    }
 
     @Override
     public void registerChatClient(String name, ChatClient chatClient) {

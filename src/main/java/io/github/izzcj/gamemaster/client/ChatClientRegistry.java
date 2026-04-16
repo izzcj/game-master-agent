@@ -9,7 +9,7 @@ import org.springframework.ai.chat.client.ChatClient;
  * @author Ale
  * @version 1.0.0
  */
-public interface ChatClientRegister {
+public interface ChatClientRegistry {
 
     /**
      * 注册ChatClient
