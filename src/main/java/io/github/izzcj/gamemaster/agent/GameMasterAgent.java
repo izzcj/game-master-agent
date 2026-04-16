@@ -1,6 +1,6 @@
 package io.github.izzcj.gamemaster.agent;
 
-import io.github.izzcj.gamemaster.client.ChatClientRegistry;
+import io.github.izzcj.gamemaster.client.ChatClientResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Component;
@@ -17,9 +17,9 @@ import reactor.core.publisher.Flux;
 public class GameMasterAgent {
 
     /**
-     * ChatClient注册中心
+     * ChatClient解析器
      */
-    private final ChatClientRegistry chatClientRegistry;
+    private final ChatClientResolver chatClientResolver;
 
     /**
      * 聊天
@@ -29,7 +29,7 @@ public class GameMasterAgent {
      * @return 回复内容
      */
     public String chat(String chatClientName, String prompt) {
-        ChatClient chatClient = this.chatClientRegistry.findChatClient(chatClientName);
+        ChatClient chatClient = this.chatClientResolver.resolveOrDefault(chatClientName);
         return chatClient.prompt()
                 .user(prompt)
                 .call()
@@ -44,7 +44,7 @@ public class GameMasterAgent {
      * @return 流式回复内容
      */
     public Flux<String> chatStream(String chatClientName, String prompt) {
-        ChatClient chatClient = this.chatClientRegistry.findChatClient(chatClientName);
+        ChatClient chatClient = this.chatClientResolver.resolveOrDefault(chatClientName);
         return chatClient.prompt()
                 .user(prompt)
                 .stream()

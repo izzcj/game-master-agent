@@ -1,7 +1,7 @@
 package io.github.izzcj.gamemaster.client;
 
-import jakarta.annotation.Nonnull;
-import org.springframework.ai.chat.client.ChatClient;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * ChatClient注册中心
@@ -12,20 +12,31 @@ import org.springframework.ai.chat.client.ChatClient;
 public interface ChatClientRegistry {
 
     /**
-     * 注册ChatClient
+     * 注册ChatClient描述信息。
      *
-     * @param name       ChatClient名称
-     * @param chatClient ChatClient实例
+     * @param descriptor ChatClient描述信息
      */
-    void registerChatClient(String name, ChatClient chatClient);
+    void register(ChatClientDescriptor descriptor);
 
     /**
-     * 根据名称查找ChatClient
+     * 根据名称或别名查找ChatClient描述信息。
      *
-     * @param name ChatClient名称
-     * @return ChatClient实例，如果未找到则返回null
+     * @param name 客户端名称或别名
+     * @return 匹配到的描述信息
      */
-    @Nonnull
-    ChatClient findChatClient(String name) throws IllegalArgumentException;
+    Optional<ChatClientDescriptor> findByName(String name);
 
+    /**
+     * 获取所有已注册的ChatClient。
+     *
+     * @return 描述信息列表
+     */
+    List<ChatClientDescriptor> list();
+
+    /**
+     * 获取默认ChatClient。
+     *
+     * @return 默认客户端描述信息
+     */
+    Optional<ChatClientDescriptor> getDefault();
 }
