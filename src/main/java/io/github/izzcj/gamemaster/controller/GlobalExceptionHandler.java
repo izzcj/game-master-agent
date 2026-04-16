@@ -1,5 +1,6 @@
 package io.github.izzcj.gamemaster.controller;
 
+import io.github.izzcj.gamemaster.exception.AgentNotFoundException;
 import io.github.izzcj.gamemaster.exception.ChatClientNotFoundException;
 import io.github.izzcj.gamemaster.exception.DuplicateChatClientException;
 import io.github.izzcj.gamemaster.exception.InvalidChatClientConfigurationException;
@@ -24,6 +25,17 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleChatClientNotFound(ChatClientNotFoundException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problemDetail.setTitle("Chat client not found");
+        problemDetail.setDetail(ex.getMessage());
+        return problemDetail;
+    }
+
+    /**
+     * Handles unsupported agent requests.
+     */
+    @ExceptionHandler(AgentNotFoundException.class)
+    public ProblemDetail handleAgentNotFound(AgentNotFoundException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problemDetail.setTitle("Agent not found");
         problemDetail.setDetail(ex.getMessage());
         return problemDetail;
     }

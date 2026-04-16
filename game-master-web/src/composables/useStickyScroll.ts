@@ -3,6 +3,8 @@ import { nextTick, ref, watch, type WatchSource } from 'vue'
 export function useStickyScroll(track: WatchSource<string>) {
   const scrollContainer = ref<HTMLElement | null>(null)
   const shouldStickToBottom = ref(true)
+  let pendingScroll: Promise<void> | null = null
+  let forceNextScroll = false
 
   function updateStickiness() {
     const element = scrollContainer.value
@@ -16,27 +18,36 @@ export function useStickyScroll(track: WatchSource<string>) {
     shouldStickToBottom.value = distance < 120
   }
 
-  async function scrollToBottom(force = false) {
-    await nextTick()
-    const element = scrollContainer.value
+  function scrollToBottom(force = false) {
+    forceNextScroll = forceNextScroll || force
 
-    if (!element) {
-      return
+    if (pendingScroll) {
+      return pendingScroll
     }
 
-    if (!force && !shouldStickToBottom.value) {
-      return
-    }
+    pendingScroll = nextTick().then(() => {
+      const element = scrollContainer.value
 
-    element.scrollTo({
-      top: element.scrollHeight,
-      behavior: force ? 'auto' : 'smooth',
+      if (!element) {
+        return
+      }
+
+      if (!forceNextScroll && !shouldStickToBottom.value) {
+        return
+      }
+
+      element.scrollTop = element.scrollHeight
+    }).finally(() => {
+      pendingScroll = null
+      forceNextScroll = false
     })
+
+    return pendingScroll
   }
 
   watch(track, () => {
     void scrollToBottom()
-  })
+  }, { flush: 'post' })
 
   return {
     scrollContainer,

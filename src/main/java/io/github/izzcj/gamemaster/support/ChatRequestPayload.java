@@ -33,4 +33,9 @@ public class ChatRequestPayload {
      */
     private String chatClient;
 
+    /**
+     * agent
+     */
+    private String agent;
+
 }

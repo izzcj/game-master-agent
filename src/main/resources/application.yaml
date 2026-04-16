@@ -1,11 +1,3 @@
 spring:
   application:
     name: game-master-agent
-  ai:
-    deepseek:
-      api-key: your-key
-    minimax:
-      api-key: your-key
-      chat:
-        options:
-          model: MiniMax-M2.7

@@ -1,8 +1,11 @@
+import type { ChatAgent } from '../types/chat'
+
 export interface ChatRequestPayload {
   requestId?: string
   chatId?: string
   message: string
   chatClient: string
+  agent: ChatAgent
 }
 
 export interface StreamChatOptions {
@@ -12,6 +15,24 @@ export interface StreamChatOptions {
 
 const apiBaseUrl = (import.meta.env.VITE_CHAT_API_BASE_URL ?? '').trim().replace(/\/$/, '')
 const chatClient = (import.meta.env.VITE_CHAT_CLIENT ?? 'default').trim() || 'default'
+const defaultAgent = ((import.meta.env.VITE_CHAT_AGENT ?? 'game-bag').trim() || 'game-bag') as ChatAgent
+
+export const chatAgents: Array<{ value: ChatAgent; label: string; description: string }> = [
+  {
+    value: 'game-bag',
+    label: 'Game Bag',
+    description: 'For game discovery and recommendations.',
+  },
+  {
+    value: 'game-walkthrough',
+    label: 'Walkthrough',
+    description: 'For guides, builds, tasks, and boss strategies.',
+  },
+]
+
+export function getDefaultChatAgent(): ChatAgent {
+  return defaultAgent === 'game-walkthrough' ? 'game-walkthrough' : 'game-bag'
+}
 
 function buildUrl(path: string) {
   if (!apiBaseUrl) {
@@ -27,6 +48,7 @@ function buildPayload(message: string, overrides?: Partial<ChatRequestPayload>):
     chatId: overrides?.chatId,
     message,
     chatClient: overrides?.chatClient ?? chatClient,
+    agent: overrides?.agent ?? getDefaultChatAgent(),
   }
 }
 

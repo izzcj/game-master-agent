@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
+import { chatAgents, getDefaultChatAgent } from '../api/chat'
 import ChatComposer from '../components/ChatComposer.vue'
 import ChatPanelHeader from '../components/ChatPanelHeader.vue'
 import HeroPanel from '../components/HeroPanel.vue'
@@ -8,13 +9,21 @@ import MessageList from '../components/MessageList.vue'
 import { useChatSession } from '../composables/useChatSession'
 import { useStickyScroll } from '../composables/useStickyScroll'
 import { starterPrompts } from '../data/starter-prompts'
+import type { ChatAgent } from '../types/chat'
 
 const input = ref('')
+const agent = ref<ChatAgent>(getDefaultChatAgent())
 const { errorBanner, isStreaming, lastUserMessage, messages, retryLastReply, sendPrompt, stopStream } = useChatSession()
 
-const scrollTrack = computed(() =>
-  messages.value.map((message) => `${message.id}:${message.content.length}:${message.status}`).join('|'),
-)
+const scrollTrack = computed(() => {
+  const lastMessage = messages.value[messages.value.length - 1]
+
+  if (!lastMessage) {
+    return 'empty'
+  }
+
+  return `${messages.value.length}:${lastMessage.id}:${lastMessage.content.length}:${lastMessage.status}`
+})
 const { scrollContainer, scrollToBottom, updateStickiness } = useStickyScroll(scrollTrack)
 
 const canSend = computed(() => input.value.trim().length > 0 && !isStreaming.value)
@@ -29,16 +38,12 @@ async function handleSubmit() {
 
   input.value = ''
   await scrollToBottom(true)
-  await sendPrompt(messageText, () => {
-    void scrollToBottom()
-  })
+  await sendPrompt(messageText, agent.value)
 }
 
 async function handleRegenerate() {
   await scrollToBottom(true)
-  await retryLastReply(() => {
-    void scrollToBottom()
-  })
+  await retryLastReply(agent.value)
 }
 
 function applyStarterPrompt(prompt: string) {
@@ -52,6 +57,8 @@ function applyStarterPrompt(prompt: string) {
 
     <section class="chat-panel">
       <ChatPanelHeader
+        v-model:agent="agent"
+        :agent-options="chatAgents"
         :can-regenerate="Boolean(lastUserMessage)"
         :is-streaming="isStreaming"
         @regenerate="handleRegenerate"

@@ -1,6 +1,6 @@
 package io.github.izzcj.gamemaster.controller;
 
-import io.github.izzcj.gamemaster.agent.GameMasterAgent;
+import io.github.izzcj.gamemaster.agent.GameMasterAgentRouter;
 import io.github.izzcj.gamemaster.support.ChatRequestPayload;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -21,7 +21,7 @@ public class ChatController {
     /**
      * 游戏大师agent
      */
-    private final GameMasterAgent gameMasterAgent;
+    private final GameMasterAgentRouter gameMasterAgentRouter;
 
     /**
      * 聊天
@@ -31,7 +31,7 @@ public class ChatController {
      */
     @PostMapping
     public String chat(@RequestBody ChatRequestPayload payload) {
-        return this.gameMasterAgent.chat(payload.getChatClient(), payload.getMessage());
+        return this.gameMasterAgentRouter.chat(payload.getAgent(), payload.getChatClient(), payload.getMessage());
     }
 
     /**
@@ -42,6 +42,6 @@ public class ChatController {
      */
     @PostMapping(path = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> chatStream(@RequestBody ChatRequestPayload payload) {
-        return this.gameMasterAgent.chatStream(payload.getChatClient(), payload.getMessage());
+        return this.gameMasterAgentRouter.chatStream(payload.getAgent(), payload.getChatClient(), payload.getMessage());
     }
 }
