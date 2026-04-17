@@ -19,29 +19,29 @@ import reactor.core.publisher.Flux;
 public class ChatController {
 
     /**
-     * 游戏大师agent
+     * 游戏大师AgentRouter
      */
     private final GameMasterAgentRouter gameMasterAgentRouter;
 
     /**
      * 聊天
      *
-     * @param payload        请求载体
+     * @param payload 请求载体
      * @return 回复内容
      */
     @PostMapping
     public String chat(@RequestBody ChatRequestPayload payload) {
-        return this.gameMasterAgentRouter.chat(payload.getAgent(), payload.getChatClient(), payload.getMessage());
+        return this.gameMasterAgentRouter.chat(payload);
     }
 
     /**
      * 聊天流式响应
      *
-     * @param payload        请求载体
+     * @param payload 请求载体
      * @return 流式回复内容
      */
     @PostMapping(path = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> chatStream(@RequestBody ChatRequestPayload payload) {
-        return this.gameMasterAgentRouter.chatStream(payload.getAgent(), payload.getChatClient(), payload.getMessage());
+        return this.gameMasterAgentRouter.chatStream(payload);
     }
 }
