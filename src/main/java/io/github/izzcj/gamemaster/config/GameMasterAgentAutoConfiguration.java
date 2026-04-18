@@ -10,6 +10,7 @@ import io.github.izzcj.gamemaster.client.RegisteredChatClient;
 import io.github.izzcj.gamemaster.log.ChatClientLogging;
 import io.github.izzcj.gamemaster.log.DefaultChatClientLogging;
 import io.github.izzcj.gamemaster.memory.GameMasterMemoryAutoConfiguration;
+import io.github.izzcj.gamemaster.rag.GameMasterRagAutoConfiguration;
 import lombok.NonNull;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
@@ -38,7 +39,7 @@ import java.util.stream.Collectors;
  * @version 1.0.0
  */
 @AutoConfiguration
-@Import(GameMasterMemoryAutoConfiguration.class)
+@Import({GameMasterMemoryAutoConfiguration.class, GameMasterRagAutoConfiguration.class})
 public class GameMasterAgentAutoConfiguration {
 
     /**
