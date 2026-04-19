@@ -34,22 +34,36 @@ public class GameMasterRagProperties {
     private double similarityThreshold = 0.6d;
 
     /**
-     * 文本切分时的目标分块大小。
+     * 语义切分配置。
      */
-    private int chunkSize = 800;
+    private SemanticProperties semantic = new SemanticProperties();
 
-    /**
-     * 文本切分时允许的最小字符块大小。
-     */
-    private int minChunkSizeChars = 350;
+    @Data
+    public static class SemanticProperties {
 
-    /**
-     * 允许写入向量库的最小文本长度。
-     */
-    private int minChunkLengthToEmbed = 10;
+        /**
+         * 单个分块允许的最大字符数。
+         */
+        private int maxChunkChars = 1_200;
 
-    /**
-     * 单批文档切分后允许生成的最大分块数。
-     */
-    private int maxNumChunks = 10_000;
+        /**
+         * 优先向后合并的最小字符数。
+         */
+        private int minChunkChars = 280;
+
+        /**
+         * 相邻片段允许合并的最小相似度。
+         */
+        private double similarityThreshold = 0.82d;
+
+        /**
+         * 最多向后尝试合并的片段数。
+         */
+        private int maxMergeLookahead = 2;
+
+        /**
+         * 是否在最终分块中保留标题路径。
+         */
+        private boolean preserveHeadings = true;
+    }
 }

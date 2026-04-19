@@ -3,7 +3,6 @@ package io.github.izzcj.gamemaster.rag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.document.Document;
-import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,7 +12,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * 将知识库文档切分后写入 pgvector
+ * 将知识库文档切分后写入 pgvector。
  *
  * @author Ale
  * @version 1.0.0
@@ -38,12 +37,12 @@ public class KnowledgeBaseIngestionService {
     private final JdbcTemplate jdbcTemplate;
 
     /**
-     * 文本切分器
+     * 语义 Markdown 切分器
      */
-    private final TokenTextSplitter tokenTextSplitter;
+    private final SemanticMarkdownChunker semanticMarkdownChunker;
 
     /**
-     * 数据库模式名
+     * 数据库 schema 名
      */
     private final String schemaName;
 
@@ -69,7 +68,7 @@ public class KnowledgeBaseIngestionService {
             return false;
         }
 
-        List<Document> chunks = this.tokenTextSplitter.apply(documents);
+        List<Document> chunks = this.semanticMarkdownChunker.chunk(documents);
         if (CollectionUtils.isEmpty(chunks)) {
             log.info("Skip knowledge base ingestion because markdown documents produced no chunks.");
             return false;
