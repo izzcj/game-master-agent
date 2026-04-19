@@ -1,0 +1,26 @@
+server:
+  port: 8091
+
+spring:
+  application:
+    name: tavily-mcp-server
+  ai:
+    mcp:
+      server:
+        enabled: true
+        protocol: STREAMABLE
+        streamable-http:
+          mcp-endpoint: /mcp
+
+tavily:
+  enabled: true
+  base-url: https://api.tavily.com
+  api-key: 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
+  max-results: 5
+  topic: general
+  search-depth: basic
+  include-domains: []
+  exclude-domains: []
+  timeout: 8s
+  include-answer: true
+  include-raw-content: false

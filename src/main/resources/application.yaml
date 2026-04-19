@@ -1,9 +1,23 @@
 spring:
   application:
     name: game-master-agent
+  datasource:
+    url: jdbc:postgresql://localhost:5432/game_master?search_path=public&stringtype=unspecified&tcpKeepAlive=true
+    username: postgres
+    password: zcj720428
   ai:
+    mcp:
+      client:
+        enabled: true
+        type: sync
+        request-timeout: 10s
+        streamable-http:
+          connections:
+            tavily:
+              url: http://localhost:8091
+              endpoint: /mcp
     model:
-      embedding: minimax
+      embedding: zhipuai
     vectorstore:
       pgvector:
         initialize-schema: true
@@ -20,3 +34,9 @@ gamemaster:
     min-chunk-size-chars: 350
     min-chunk-length-to-embed: 10
     max-num-chunks: 10000
+  mcp:
+    walkthrough:
+      enabled: true
+      connection-name: tavily
+      tool-names:
+        - search_web_for_walkthrough

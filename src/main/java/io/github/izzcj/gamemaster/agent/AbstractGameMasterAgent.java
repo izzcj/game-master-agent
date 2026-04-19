@@ -5,6 +5,7 @@ import io.github.izzcj.gamemaster.support.ChatRequestPayload;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.api.Advisor;
 import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.tool.ToolCallback;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
@@ -30,9 +31,11 @@ public abstract class AbstractGameMasterAgent implements GameMasterAgent {
     public String chat(ChatRequestPayload payload) {
         ChatClient chatClient = this.chatClientResolver.resolveOrDefault(payload.getChatClient());
         List<Advisor> advisors = this.advisors(payload);
+        ToolCallback[] toolCallbacks = this.toolCallbacks(payload);
         return chatClient.prompt()
                 .system(this.systemPrompt())
                 .user(payload.getMessage())
+                .toolCallbacks(toolCallbacks)
                 .advisors(a -> {
                     a.param(ChatMemory.CONVERSATION_ID, payload.getChatId());
                     if (!advisors.isEmpty()) {
@@ -47,9 +50,11 @@ public abstract class AbstractGameMasterAgent implements GameMasterAgent {
     public Flux<String> chatStream(ChatRequestPayload payload) {
         ChatClient chatClient = this.chatClientResolver.resolveOrDefault(payload.getChatClient());
         List<Advisor> advisors = this.advisors(payload);
+        ToolCallback[] toolCallbacks = this.toolCallbacks(payload);
         return chatClient.prompt()
                 .system(this.systemPrompt())
                 .user(payload.getMessage())
+                .toolCallbacks(toolCallbacks)
                 .advisors(a -> {
                     a.param(ChatMemory.CONVERSATION_ID, payload.getChatId());
                     if (!advisors.isEmpty()) {
@@ -61,10 +66,17 @@ public abstract class AbstractGameMasterAgent implements GameMasterAgent {
     }
 
     /**
-     * Additional advisors for the current request.
+     * 配置额外的Advisor
      */
     protected List<Advisor> advisors(ChatRequestPayload payload) {
         return List.of();
+    }
+
+    /**
+     * 配置ToolCallback
+     */
+    protected ToolCallback[] toolCallbacks(ChatRequestPayload payload) {
+        return new ToolCallback[0];
     }
 
     /**
