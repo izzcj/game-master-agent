@@ -359,4 +359,4 @@ curl -N -X POST http://localhost:8080/ai/chat/stream \
 
 ## License
 
-本项目使用 [MIT License](LICENSE)。
+本项目基于 [Apache License 2.0](LICENSE) 开源协议。
